@@ -1,25 +1,39 @@
 package br.ce.wcaquino.tasks.functional;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class TasksTest {
 	
-	public WebDriver acessarAplicacao() {
+	public WebDriver acessarAplicacao() throws MalformedURLException {
 		System.setProperty("webdriver.chrome.driver", "C:\\webdrivers\\chromedriver\\85\\chromedriver.exe");
-		WebDriver driver = new ChromeDriver();//como foi colocado no path o caminho até o ChromeDriver, não precisa setar o caminho do driver aqui (mas no build do Jenkins dá erro, aí preciso colocar o caminho aqui)
-		driver.navigate().to("http://localhost:8080/tasks");
+		
+		// Inicialização normal (sem Grid)
+		//		WebDriver driver = new ChromeDriver();//como foi colocado no path o caminho até o ChromeDriver, não precisa setar o caminho do driver aqui (mas no build do Jenkins dá erro, aí preciso colocar o caminho aqui)
+		
+		// Inicialização usando Selenium Grid
+		DesiredCapabilities cap = DesiredCapabilities.chrome();
+		WebDriver driver;
+		driver = new RemoteWebDriver(new URL("http://192.168.99.100:4444/wd/hub"), cap);//peguei essa URL do prompt onde o hub está rodando
+		// se quiser rodar na minha máquina, o ip é: 192.168.1.106
+		// se quiser rodar no ambiente dockerizado, o ip é: 192.168.99.100
+		
+		//Daqui pra baixo é igual usando Selenium Grid ou não
+		driver.navigate().to("http://192.168.1.106:8080/tasks");//não dá pra usar localhost se rodar em ambiente dockerizado, pq a aplicação não estará dentro dos containeres!
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		return driver;
 	}
 	
 	@Test
-	public void deveSalvarTarefaComSucesso() {
+	public void deveSalvarTarefaComSucesso() throws MalformedURLException {
 		WebDriver driver = acessarAplicacao();
 		try {
 			//clicar em Add Todo
@@ -45,7 +59,7 @@ public class TasksTest {
 	}
 	
 	@Test
-	public void naoDeveSalvarTarefaSemDescricao() {
+	public void naoDeveSalvarTarefaSemDescricao() throws MalformedURLException {
 		WebDriver driver = acessarAplicacao();
 		try {
 			//clicar em Add Todo
@@ -68,7 +82,7 @@ public class TasksTest {
 	}
 	
 	@Test
-	public void naoDeveSalvarTarefaSemData() {
+	public void naoDeveSalvarTarefaSemData() throws MalformedURLException {
 		WebDriver driver = acessarAplicacao();
 		try {
 			//clicar em Add Todo
@@ -91,7 +105,7 @@ public class TasksTest {
 	}
 	
 	@Test
-	public void naoDeveSalvarTarefaComDataPassada() {
+	public void naoDeveSalvarTarefaComDataPassada() throws MalformedURLException {
 		WebDriver driver = acessarAplicacao();
 		try {
 			//clicar em Add Todo
