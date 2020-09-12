@@ -11,7 +11,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 public class TasksTest {
 	
 	public WebDriver acessarAplicacao() {
-		WebDriver driver = new ChromeDriver();//como foi colocado no path o caminho até o ChromeDriver, não precisa setar o caminho do driver aqui
+		System.setProperty("webdriver.chrome.driver", "C:\\webdrivers\\chromedriver\\85\\chromedriver.exe");
+		WebDriver driver = new ChromeDriver();//como foi colocado no path o caminho até o ChromeDriver, não precisa setar o caminho do driver aqui (mas no build do Jenkins dá erro, aí preciso colocar o caminho aqui)
 		driver.navigate().to("http://localhost:8080/tasks");
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		return driver;
