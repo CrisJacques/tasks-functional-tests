@@ -1,15 +1,13 @@
 package br.ce.wcaquino.tasks.functional;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class TasksTest {
 	
@@ -17,17 +15,18 @@ public class TasksTest {
 		System.setProperty("webdriver.chrome.driver", "C:\\webdrivers\\chromedriver\\85\\chromedriver.exe");
 		
 		// Inicialização normal (sem Grid)
-		//		WebDriver driver = new ChromeDriver();//como foi colocado no path o caminho até o ChromeDriver, não precisa setar o caminho do driver aqui (mas no build do Jenkins dá erro, aí preciso colocar o caminho aqui)
+		WebDriver driver = new ChromeDriver();//como foi colocado no path o caminho até o ChromeDriver, não precisa setar o caminho do driver aqui (mas no build do Jenkins dá erro, aí preciso colocar o caminho aqui)
 		
 		// Inicialização usando Selenium Grid
-		DesiredCapabilities cap = DesiredCapabilities.chrome();
-		WebDriver driver;
-		driver = new RemoteWebDriver(new URL("http://192.168.99.100:4444/wd/hub"), cap);//peguei essa URL do prompt onde o hub está rodando
+		//DesiredCapabilities cap = DesiredCapabilities.chrome();
+		//WebDriver driver;
+		//driver = new RemoteWebDriver(new URL("http://192.168.99.100:4444/wd/hub"), cap);//peguei essa URL do prompt onde o hub está rodando
 		// se quiser rodar na minha máquina, o ip é: 192.168.1.106
 		// se quiser rodar no ambiente dockerizado, o ip é: 192.168.99.100
 		
 		//Daqui pra baixo é igual usando Selenium Grid ou não
-		driver.navigate().to("http://192.168.1.106:8080/tasks");//não dá pra usar localhost se rodar em ambiente dockerizado, pq a aplicação não estará dentro dos containeres!
+		//driver.navigate().to("http://192.168.1.106:8080/tasks");//não dá pra usar localhost se rodar em ambiente dockerizado, pq a aplicação não estará dentro dos containeres!
+		driver.navigate().to("localhost:8080/tasks");//só dá para rodar assim se não usar o Grid
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		return driver;
 	}
